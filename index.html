@@ -1,0 +1,993 @@
+
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lei do Resfriamento de Newton</title>
+
+<style>
+
+* {
+
+    box-sizing: border-box;
+
+}
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background: #f0f4f8;
+
+    color: #243746;
+
+    margin: 0;
+
+}
+
+header {
+
+    background: #18324b;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 25px 15px;
+
+}
+
+main {
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 20px;
+
+}
+
+.card {
+
+    background: white;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 10px #0001;
+
+}
+
+h2 {
+
+    color: #18324b;
+
+}
+
+.formula {
+
+    background: #eaf3f8;
+
+    padding: 18px;
+
+    text-align: center;
+
+    font-size: 22px;
+
+    border-radius: 8px;
+
+}
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 12px;
+
+}
+
+label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-weight: bold;
+
+}
+
+input {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #bbb;
+
+    border-radius: 6px;
+
+    margin-bottom: 12px;
+
+}
+
+button {
+
+    background: #3478a8;
+
+    color: white;
+
+    padding: 12px 16px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    margin: 8px 5px 0 0;
+
+}
+
+button:hover {
+
+    background: #245b83;
+
+}
+
+#erro {
+
+    color: #c0392b;
+
+}
+
+#resultado {
+
+    font-weight: bold;
+
+    color: #26724f;
+
+}
+
+.overflow {
+
+    overflow-x: auto;
+
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 15px;
+
+}
+
+th, td {
+
+    padding: 10px;
+
+    border-bottom: 1px solid #ddd;
+
+    text-align: center;
+
+}
+
+th {
+
+    background: #eaf3f8;
+
+}
+
+canvas {
+
+    display: block;
+
+    width: 100%;
+
+    height: 320px;
+
+}
+
+footer {
+
+    background: #18324b;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 25px;
+
+}
+
+footer h2 {
+
+    color: white;
+
+}
+
+footer ul {
+
+    list-style: none;
+
+    padding: 0;
+
+    line-height: 2;
+
+}
+
+@media print {
+
+    button {
+
+        display: none;
+
+    }
+
+    body {
+
+        background: white;
+
+    }
+
+    .card {
+
+        box-shadow: none;
+
+        border: 1px solid #ddd;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>Lei do Resfriamento de Newton</h1>
+
+    <p>Calculadora e simulador de Física</p>
+
+</header>
+
+<main>
+
+<!-- IDENTIFICAÇÃO DO ALUNO -->
+
+<section class="card">
+
+    <h2>1. Identificação do aluno</h2>
+
+    <label for="nomeAluno">Nome completo:</label>
+
+    <input
+
+        type="text"
+
+        id="nomeAluno"
+
+        placeholder="Digite seu nome completo"
+
+    >
+
+    <label for="serieAluno">Série / Turma:</label>
+
+    <input
+
+        type="text"
+
+        id="serieAluno"
+
+        placeholder="Ex.: 1º ano de Engenharia"
+
+    >
+
+    <button type="button" onclick="salvarIdentificacao()">
+
+        Confirmar identificação
+
+    </button>
+
+    <p id="identificacao"></p>
+
+</section>
+
+<!-- FÓRMULA -->
+
+<section class="card">
+
+    <h2>2. Fórmula física</h2>
+
+    <div class="formula">
+
+        T(t) = Ta + (T₀ − Ta) · e<sup>−kt</sup>
+
+    </div>
+
+    <p>
+
+        <strong>T(t):</strong> temperatura no instante t.<br>
+
+        <strong>Ta:</strong> temperatura ambiente.<br>
+
+        <strong>T₀:</strong> temperatura inicial.<br>
+
+        <strong>k:</strong> constante de resfriamento.<br>
+
+        <strong>t:</strong> tempo decorrido.
+
+    </p>
+
+    <p>
+
+        A lei explica como a temperatura de um corpo muda
+
+        com o tempo, aproximando-se da temperatura ambiente.
+
+    </p>
+
+</section>
+
+<!-- PARÂMETROS -->
+
+<section class="card">
+
+    <h2>3. Inserir parâmetros</h2>
+
+    <form id="formulario">
+
+        <div class="grid">
+
+            <div>
+
+                <label for="t0">Temperatura inicial (°C)</label>
+
+                <input id="t0" type="number" value="90"
+
+                    step="any" required>
+
+            </div>
+
+            <div>
+
+                <label for="ta">Temperatura ambiente (°C)</label>
+
+                <input id="ta" type="number" value="25"
+
+                    step="any" required>
+
+            </div>
+
+            <div>
+
+                <label for="k">Constante k (min⁻¹)</label>
+
+                <input id="k" type="number" value="0.1"
+
+                    min="0.000001" step="any" required>
+
+            </div>
+
+            <div>
+
+                <label for="inicio">Tempo inicial (min)</label>
+
+                <input id="inicio" type="number" value="0"
+
+                    min="0" step="any" required>
+
+            </div>
+
+            <div>
+
+                <label for="fim">Tempo final (min)</label>
+
+                <input id="fim" type="number" value="30"
+
+                    min="0.01" step="any" required>
+
+            </div>
+
+            <div>
+
+                <label for="intervalo">Intervalo (min)</label>
+
+                <input id="intervalo" type="number" value="1"
+
+                    min="0.001" step="any" required>
+
+            </div>
+
+        </div>
+
+        <button type="submit">Calcular</button>
+
+        <button type="button" onclick="restaurar()">
+
+            Restaurar exemplo
+
+        </button>
+
+        <p id="erro"></p>
+
+        <p id="resultado"></p>
+
+    </form>
+
+</section>
+
+<!-- TABELA -->
+
+<section class="card">
+
+    <h2>4. Tabela de resultados</h2>
+
+    <div class="overflow">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Tempo (min)</th>
+
+                    <th>Temperatura (°C)</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tabela"></tbody>
+
+        </table>
+
+    </div>
+
+    <button onclick="exportarCSV()">Exportar tabela CSV</button>
+
+</section>
+
+<!-- GRÁFICO -->
+
+<section class="card">
+
+    <h2>5. Gráfico de resfriamento</h2>
+
+    <canvas id="grafico"></canvas>
+
+    <button onclick="exportarPNG()">Exportar gráfico PNG</button>
+
+    <button onclick="window.print()">Imprimir / Salvar PDF</button>
+
+</section>
+
+<!-- EXEMPLO -->
+
+<section class="card">
+
+    <h2>6. Exemplo resolvido</h2>
+
+    <p>
+
+        Um café está a 90 °C em uma sala a 25 °C.
+
+        Considere k = 0,1 min⁻¹. Qual será sua temperatura
+
+        após 10 minutos?
+
+    </p>
+
+    <p>T(10) = 25 + (90 − 25) · e⁻¹</p>
+
+    <p>T(10) ≈ 25 + 65 · 0,3679</p>
+
+    <p><strong>Resultado: aproximadamente 48,91 °C.</strong></p>
+
+</section>
+
+</main>
+
+<!-- ALUNOS NO FINAL -->
+
+<footer>
+
+    <h2>Alunos da turma do 1º ano de Engenharia</h2>
+
+    <ul>
+
+        <li>Ana Luiza</li>
+
+        <li>Pedro</li>
+
+        <li>Lucas</li>
+
+        <li>Kayke</li>
+
+        <li>Gabriel Alexandre</li>
+
+    </ul>
+
+    <p>Projeto acadêmico de Física</p>
+
+    <p>Estudo da Lei do Resfriamento de Newton</p>
+
+</footer>
+
+<script>
+
+let dados = [];
+
+let parametros = null;
+
+function elemento(id) {
+
+    return document.getElementById(id);
+
+}
+
+// IDENTIFICAÇÃO
+
+function salvarIdentificacao() {
+
+    const nome = elemento("nomeAluno").value.trim();
+
+    const serie = elemento("serieAluno").value.trim();
+
+    if (!nome || !serie) {
+
+        alert("Preencha seu nome e sua série.");
+
+        return;
+
+    }
+
+    elemento("identificacao").textContent =
+
+        "Aluno: " + nome + " | Série: " + serie;
+
+}
+
+// CÁLCULO DA TEMPERATURA
+
+function temperatura(t, p) {
+
+    return p.ta + (p.t0 - p.ta) * Math.exp(-p.k * t);
+
+}
+
+function formatar(n) {
+
+    return n.toLocaleString("pt-BR", {
+
+        minimumFractionDigits: 2,
+
+        maximumFractionDigits: 2
+
+    });
+
+}
+
+// FORMULÁRIO
+
+elemento("formulario").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    calcular();
+
+});
+
+function calcular() {
+
+    elemento("erro").textContent = "";
+
+    elemento("resultado").textContent = "";
+
+    const p = {
+
+        t0: Number(elemento("t0").value),
+
+        ta: Number(elemento("ta").value),
+
+        k: Number(elemento("k").value),
+
+        inicio: Number(elemento("inicio").value),
+
+        fim: Number(elemento("fim").value),
+
+        intervalo: Number(elemento("intervalo").value)
+
+    };
+
+    if (Object.values(p).some(v => !Number.isFinite(v))) {
+
+        elemento("erro").textContent =
+
+            "Preencha todos os campos corretamente.";
+
+        return;
+
+    }
+
+    if (
+
+        p.k <= 0 ||
+
+        p.inicio < 0 ||
+
+        p.fim <= p.inicio ||
+
+        p.intervalo <= 0
+
+    ) {
+
+        elemento("erro").textContent =
+
+            "Verifique as temperaturas, os tempos e o intervalo.";
+
+        return;
+
+    }
+
+    if (Math.ceil((p.fim - p.inicio) / p.intervalo) > 10000) {
+
+        elemento("erro").textContent =
+
+            "Aumente o intervalo para gerar no máximo 10.000 pontos.";
+
+        return;
+
+    }
+
+    parametros = p;
+
+    dados = [];
+
+    const quantidade = Math.ceil(
+
+        (p.fim - p.inicio) / p.intervalo
+
+    );
+
+    for (let i = 0; i < quantidade; i++) {
+
+        const t = p.inicio + i * p.intervalo;
+
+        if (t < p.fim) {
+
+            dados.push({
+
+                t: t,
+
+                temp: temperatura(t, p)
+
+            });
+
+        }
+
+    }
+
+    dados.push({
+
+        t: p.fim,
+
+        temp: temperatura(p.fim, p)
+
+    });
+
+    elemento("tabela").innerHTML = dados.map(d => `
+
+        <tr>
+
+            <td>${formatar(d.t)}</td>
+
+            <td>${formatar(d.temp)}</td>
+
+        </tr>
+
+    `).join("");
+
+    elemento("resultado").textContent =
+
+        "Temperatura no tempo final: " +
+
+        formatar(temperatura(p.fim, p)) + " °C";
+
+    desenharGrafico();
+
+}
+
+// GRÁFICO
+
+function desenharGrafico() {
+
+    const canvas = elemento("grafico");
+
+    const ctx = canvas.getContext("2d");
+
+    const largura = canvas.clientWidth || 600;
+
+    const altura = 320;
+
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = largura * dpr;
+
+    canvas.height = altura * dpr;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const w = largura;
+
+    const h = altura;
+
+    const margem = {l: 58, r: 15, t: 20, b: 45};
+
+    const p = parametros;
+
+    const valores = dados.map(d => d.temp).concat([p.ta]);
+
+    let minY = Math.min(...valores);
+
+    let maxY = Math.max(...valores);
+
+    if (minY === maxY) {
+
+        minY -= 1;
+
+        maxY += 1;
+
+    }
+
+    const extra = (maxY - minY) * 0.1;
+
+    minY -= extra;
+
+    maxY += extra;
+
+    const x = t => margem.l +
+
+        (t - p.inicio) / (p.fim - p.inicio) *
+
+        (w - margem.l - margem.r);
+
+    const y = temp => h - margem.b -
+
+        (temp - minY) / (maxY - minY) *
+
+        (h - margem.t - margem.b);
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.font = "11px Arial";
+
+    ctx.fillStyle = "#526776";
+
+    ctx.strokeStyle = "#dce5eb";
+
+    for (let i = 0; i <= 5; i++) {
+
+        const yy = margem.t +
+
+            i * (h - margem.t - margem.b) / 5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(margem.l, yy);
+
+        ctx.lineTo(w - margem.r, yy);
+
+        ctx.stroke();
+
+        ctx.fillText(
+
+            formatar(maxY - i * (maxY - minY) / 5),
+
+            2,
+
+            yy + 4
+
+        );
+
+    }
+
+    ctx.strokeStyle = "#3478a8";
+
+    ctx.lineWidth = 2.5;
+
+    ctx.beginPath();
+
+    dados.forEach((d, i) => {
+
+        if (i === 0) {
+
+            ctx.moveTo(x(d.t), y(d.temp));
+
+        } else {
+
+            ctx.lineTo(x(d.t), y(d.temp));
+
+        }
+
+    });
+
+    ctx.stroke();
+
+    // Temperatura ambiente
+
+    ctx.strokeStyle = "#d08a54";
+
+    ctx.setLineDash([6, 4]);
+
+    ctx.beginPath();
+
+    ctx.moveTo(margem.l, y(p.ta));
+
+    ctx.lineTo(w - margem.r, y(p.ta));
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = "#526776";
+
+    for (let i = 0; i <= 5; i++) {
+
+        const t = p.inicio + (p.fim - p.inicio) * i / 5;
+
+        ctx.fillText(
+
+            formatar(t),
+
+            x(t) - 14,
+
+            h - 25
+
+        );
+
+    }
+
+    ctx.fillStyle = "#243746";
+
+    ctx.textAlign = "center";
+
+    ctx.fillText("Tempo (min)", w / 2, h - 5);
+
+    ctx.save();
+
+    ctx.translate(14, h / 2);
+
+    ctx.rotate(-Math.PI / 2);
+
+    ctx.fillText("Temperatura (°C)", 0, 0);
+
+    ctx.restore();
+
+}
+
+// EXPORTAR TABELA
+
+function exportarCSV() {
+
+    if (!dados.length) {
+
+        alert("Faça um cálculo primeiro.");
+
+        return;
+
+    }
+
+    const linhas = [
+
+        ["Tempo (min)", "Temperatura (°C)"],
+
+        ...dados.map(d => [d.t, d.temp])
+
+    ];
+
+    const csv = "\uFEFF" +
+
+        linhas.map(l => l.join(";")).join("\n");
+
+    const blob = new Blob([csv], {
+
+        type: "text/csv;charset=utf-8"
+
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download = "resultados-resfriamento.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+// EXPORTAR GRÁFICO
+
+function exportarPNG() {
+
+    if (!dados.length) {
+
+        alert("Faça um cálculo primeiro.");
+
+        return;
+
+    }
+
+    const a = document.createElement("a");
+
+    a.download = "grafico-resfriamento.png";
+
+    a.href = elemento("grafico").toDataURL("image/png");
+
+    a.click();
+
+}
+
+// RESTAURAR VALORES
+
+function restaurar() {
+
+    elemento("t0").value = 90;
+
+    elemento("ta").value = 25;
+
+    elemento("k").value = 0.1;
+
+    elemento("inicio").value = 0;
+
+    elemento("fim").value = 30;
+
+    elemento("intervalo").value = 1;
+
+    calcular();
+
+}
+
+// ATUALIZAR GRÁFICO AO REDIMENSIONAR
+
+window.addEventListener("resize", function() {
+
+    if (dados.length) {
+
+        desenharGrafico();
+
+    }
+
+});
+
+// EXECUTAR AO ABRIR
+
+calcular();
+
+</script>
+
+</body>
+
+</html>
